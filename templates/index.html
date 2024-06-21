@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NLP - Sentiment Analysis using TextBlob</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #1a1a1a; /* Dark background */
+            color: #ffffff; /* White text */
+            font-family: Arial, sans-serif;
+            padding-bottom: 60px; /* Padding for footer */
+        }
+        .center-heading {
+            text-align: center;
+            color: #18FFFF; /* Light blue text */
+            margin-top: 20px;
+        }
+        .card {
+            background-color: #212121; /* Dark grey card background */
+            border: 1px solid #18FFFF; /* Light blue border */
+            border-radius: 15px;
+            margin-top: 50px;
+        }
+        .form-control {
+            background-color: #424242; /* Darker grey input background */
+            color: #ffffff; /* White text */
+            border-color: #18FFFF; /* Light blue border */
+        }
+        .form-control:focus {
+            background-color: #424242; /* Darker grey input background on focus */
+            color: #ffffff; /* White text on focus */
+            border-color: #18FFFF; /* Light blue border on focus */
+        }
+        .btn-secondary {
+            background-color: #18FFFF; /* Light blue button */
+            border-color: #18FFFF; /* Light blue border */
+            color: #1a1a1a; /* Dark text */
+        }
+        #system_response {
+            background-color: #333333; /* Dark grey result background */
+            color: #ffffff; /* White text */
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #1a1a1a; /* Dark background */
+            color: #18FFFF; /* Light blue text */
+            text-align: center;
+            padding: 10px 0;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-body">
+                <h1 class="center-heading">NLP - Sentiment Analysis using TextBlob</h1> 
+                <div style="padding: 25px;">
+                    <div>
+                        <label class="form-label">Please enter the text to be analyzed</label>
+                        <textarea class="form-control" id="textToAnalyze" rows="5"></textarea>
+                    </div>
+                    <div style="padding: 25px;">
+                        <button onclick="runSentimentAnalysis()" class="btn btn-secondary">Run Sentiment Analysis</button>
+                    </div>
+                    <div style="padding: 25px;"></div>
+                    <div>
+                        <h2 class="mb-3">
+                            <label class="form-label">Result of Sentiment Analysis</label>
+                        </h2>
+                        <div id="system_response"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        &copy; Kliz Andrei Millares
+    </footer>
+    <script>
+        function runSentimentAnalysis() {
+            let textToAnalyze = document.getElementById("textToAnalyze").value;
+
+            let xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    let response = JSON.parse(xhttp.responseText);
+                    if (response.error) {
+                        document.getElementById("system_response").innerHTML = `Error: ${response.error}`;
+                    } else {
+                        document.getElementById("system_response").innerHTML = `Label: ${response.label}, Score: ${response.score}`;
+                    }
+                }
+            };
+            xhttp.open("GET", "/sentimentAnalyzer?textToAnalyze=" + encodeURIComponent(textToAnalyze), true);
+            xhttp.send();
+        }
+    </script>
+</body>
+</html>
